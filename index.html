@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Крестики-нолики</title>
+  <style>
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 2px;
+      width: 300px;
+      height: 300px;
+      margin-bottom: 10px;
+    }
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="board"></div>
+
+  <script>
+    // Создаем игровое поле
+    const board = document.querySelector('.board');
+    let currentPlayer = 'X';
+    let gameEnded = false;
+
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.dataset.index = i;
+      board.appendChild(cell);
+    }
+
+    // Обработчик клика по ячейке
+    function handleCellClick(event) {
+      if (gameEnded) return;
+      const cell = event.target;
+      const index = cell.dataset.index;
+
+      // Проверяем, что ячейка пуста
+      if (cell.textContent !== '') return;
+
+      // Устанавливаем значение в ячейку
+      cell.textContent = currentPlayer;
+
+      // Проверяем победу
+      if (checkWin()) {
+        alert(`Игрок ${currentPlayer} победил!`);
+        gameEnded = true;
+      } else if (checkDraw()) {
+        alert('Ничья!');
+        gameEnded = true;
+      } else {
+        // Переключаем игрока
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+    }
+
+    // Добавляем обработчик клика для каждой ячейки
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      cell.addEventListener('click', handleCellClick);
+    });
+
+    // Проверка победы
+    function checkWin() {
+      const winConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      for (let condition of winConditions) {
+        const [a, b, c] = condition;
+        const cells = document.querySelectorAll('.cell');
+        if (
+          cells[a].textContent === currentPlayer &&
+          cells[b].textContent === currentPlayer &&
+          cells[c].textContent === currentPlayer
+        ) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    // Проверка ничьей
+    function checkDraw() {
+      const cells = document.querySelectorAll('.cell');
+      for (let cell of cells) {
+        if (cell.textContent === '') {
+          return false;
+        }
+      }
+      return true;
+    }
+  </script>
+</body>
+</html>
