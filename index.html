@@ -24,6 +24,7 @@
   </style>
 </head>
 <body>
+  <h1>Крестики-нолики</h1>
   <div class="board"></div>
 
   <script>
@@ -31,6 +32,7 @@
     const board = document.querySelector('.board');
     let currentPlayer = 'X';
     let gameEnded = false;
+    let isPlayer1Turn = true;
 
     for (let i = 0; i < 9; i++) {
       const cell = document.createElement('div');
@@ -48,6 +50,11 @@
       // Проверяем, что ячейка пуста
       if (cell.textContent !== '') return;
 
+      // Проверяем, чей сейчас ход
+      if ((isPlayer1Turn && currentPlayer === 'O') || (!isPlayer1Turn && currentPlayer === 'X')) {
+        return;
+      }
+
       // Устанавливаем значение в ячейку
       cell.textContent = currentPlayer;
 
@@ -61,6 +68,7 @@
       } else {
         // Переключаем игрока
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        isPlayer1Turn = !isPlayer1Turn;
       }
     }
 
